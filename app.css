@@ -3,7 +3,6 @@
 */
 @import url('https://fonts.googleapis.com/css?family=Hind:400,700&display=swap');
 
-
 *, *::before, *::after {
     box-sizing: border-box;
     font-family: 'Hind', sans-serif;
@@ -12,7 +11,7 @@
 body {
     padding: 0;
     margin: 0;
-    background: linear-gradient(to right, #457fca, #5691c8);
+    background: linear-gradient(280deg, #457fca, #5691c8);
 }
   
 /*
@@ -27,8 +26,8 @@ body {
     grid-template-rows: minmax(100px, auto) repeat(5, 100px);
 }
 
-.calculator > button {
-    font-size: 2rem;
+.calculator .btn {
+    font-size: 1.8rem;
     border: 1px solid #fff;
     cursor: pointer;
     outline: none;
@@ -36,7 +35,7 @@ body {
     transition: background-color 0.15s ease-in-out;
 }
 
-.calculator > button:hover {
+.calculator .btn:hover {
     background-color: rgba(255, 255, 255, .9);
 }
 
@@ -62,6 +61,6 @@ body {
 }
 
 .calculator__display .cur-operand {
-    color: white;
+    color: #fff;
     font-size: 2.5rem;
 }
