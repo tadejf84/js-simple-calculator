@@ -24,7 +24,7 @@ class Calculator {
         CalculatorUI.updateDisplay();
     }
 
-
+    // delete last input
     delete() {
         this.curOperand = this.curOperand.toString().slice(0, -1);
         CalculatorUI.updateDisplay(this.prevOperand, this.curOperand, this.operation);
@@ -47,6 +47,7 @@ class Calculator {
         CalculatorUI.updateDisplay(this.prevOperand, this.curOperand, this.operation);
     }
 
+    // compute result
     compute() {
         let result;
         const prevVal = +this.prevOperand;
@@ -109,7 +110,7 @@ class CalculatorUI {
 // instantiate calculator
 const calculator = new Calculator(prevOperandDisplay, curOperandDisplay);
 
-// event listener
+// event listeners
 btnsNum.forEach( btn => {
     btn.addEventListener('click', () => {
         calculator.appendNumber(btn.innerText);
