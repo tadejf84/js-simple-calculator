@@ -1,5 +1,6 @@
 // DOM caching
 const btnsNum = document.querySelectorAll('.btn--num');
+const btnDecimalSeparator = document.querySelector('.btn--decimal-separator');
 const btnsOperation = document.querySelectorAll('.btn--operation');
 const btnEquals = document.querySelector('.btn--equals');
 const btnDel = document.querySelector('.btn--del');
@@ -27,23 +28,32 @@ class Calculator {
 
     }
 
+    // append number/separator to current operand
     appendNumber(num) {
-        this.curOperand = num;
-        CalculatorUI.updateDisplay(this.curOperand);
+        if(num === '.' && this.curOperand.includes('.')) return; // only one decimal point allowed
+        this.curOperand = this.curOperand + num.toString();
+        CalculatorUI.updateDisplay(this.prevOperand, this.curOperand);
     }
 
-    operation(op) {
-
+    // selected operation
+    operationSelect(operation) {
+        if (this.curOperand === '') return;
+        if (this.prevOperand !== '') this.compute();
+        this.operation = operation;
+        this.prevOperand = this.curOperand;
+        this.curOperand = '';
+        CalculatorUI.updateDisplay(this.prevOperand, this.curOperand);
     }
 
-    calculate() {
-
+    compute() {
+        console.log('computing...');
     }
 }
 
 // calculator class for UI
 class CalculatorUI {
-    static updateDisplay(curOperand) {
+    static updateDisplay(prevOperand, curOperand) {
+        prevOperandDisplay.innerText = prevOperand;
         curOperandDisplay.innerText = curOperand;
     }
 }
@@ -52,9 +62,18 @@ class CalculatorUI {
 const calculator = new Calculator(prevOperandDisplay, curOperandDisplay);
 
 // event listener
-btnsNum.forEach(btn => {
-    
+btnsNum.forEach( btn => {
     btn.addEventListener('click', () => {
         calculator.appendNumber(btn.innerText);
+    });
+});
+
+btnDecimalSeparator.addEventListener('click', function () {
+    calculator.appendNumber(this.innerText);
+});
+
+btnsOperation.forEach( btn => {
+    btn.addEventListener('click', () => {
+        calculator.operationSelect(btn.innerText);
     });
 });
