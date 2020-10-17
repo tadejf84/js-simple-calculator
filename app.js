@@ -1,22 +1,35 @@
 // DOM caching
-const btnsNum = document.querySelectorAll('.btn--num');
-const btnDecimalSeparator = document.querySelector('.btn--decimal-separator');
-const btnsOperation = document.querySelectorAll('.btn--operation');
-const btnEquals = document.querySelector('.btn--equals');
-const btnDel = document.querySelector('.btn--del');
-const btnClear = document.querySelector('.btn--clear');
+const btnsNum = document.querySelectorAll('.calculator__btn--num');
+const btnDecimalSeparator = document.querySelector('.calculator__btn--decimal-separator');
+const btnsOperation = document.querySelectorAll('.calculator__btn--operation');
+const btnEquals = document.querySelector('.calculator__btn--equals');
+const btnDel = document.querySelector('.calculator__btn--del');
+const btnClear = document.querySelector('.calculator__btn--clear');
 const prevOperandDisplay = document.querySelector('.prev-operand');
 const curOperandDisplay = document.querySelector('.cur-operand');
 
-// calculator class for logic
+/**
+ * Calculator Class
+ * 
+ */
 class Calculator {
+
+    /**
+     * @constructor
+     * 
+     * @param {HTMLElement} prevOperandDisplay 
+     * @param {HTMLElement} curOperandDisplay 
+     */
     constructor(prevOperandDisplay, curOperandDisplay) {
         this.prevOperandDisplay = prevOperandDisplay;
         this.curOperandDisplay = curOperandDisplay;
-        this.clear();   // clear first
+        this.clear();
     }
 
-    // clear display
+    /**
+     * Clear display
+     * 
+     */
     clear() {
         this.curOperand = '';
         this.prevOperand = '';
@@ -24,20 +37,31 @@ class Calculator {
         CalculatorUI.updateDisplay();
     }
 
-    // delete last input
+    /**
+     * Delete last input
+     * 
+     */
     delete() {
         this.curOperand = this.curOperand.toString().slice(0, -1);
         CalculatorUI.updateDisplay(this.prevOperand, this.curOperand, this.operation);
     }
 
-    // append number/separator to current operand
+    /**
+     * Append number/separator to current operand
+     * 
+     * @param {string} num 
+     */
     appendNumber(num) {
-        if(num === '.' && this.curOperand.includes('.')) return; // only one decimal point allowed
+        if(num === '.' && this.curOperand.includes('.')) return; // Only one decimal point allowed
         this.curOperand = this.curOperand + num.toString();
         CalculatorUI.updateDisplay(this.prevOperand, this.curOperand, this.operation);
     }
 
-    // selected operation
+    /**
+     * Select operation
+     * 
+     * @param {string} operation 
+     */
     operationSelect(operation) {
         if (this.curOperand === '') return;
         if (this.prevOperand !== '') this.compute();
@@ -47,7 +71,10 @@ class Calculator {
         CalculatorUI.updateDisplay(this.prevOperand, this.curOperand, this.operation);
     }
 
-    // compute result
+    /**
+     * Compute result
+     * 
+     */
     compute() {
         let result;
         const prevVal = +this.prevOperand;
@@ -75,10 +102,18 @@ class Calculator {
     }
 }
 
-// calculator class for UI
+
+/**
+ * CalculatorUI Class for handling UI
+ * 
+ */
 class CalculatorUI {
 
-    // get numbers in correct format
+    /**
+     * Get number in correct format
+     * 
+     * @param {string} num 
+     */
     static formatNumber(num) {
         const stringNum = num.toString();
         const integerDigits = +(stringNum.split('.')[0]);
@@ -96,7 +131,13 @@ class CalculatorUI {
         }
     }
 
-    // updat display
+    /**
+     * Update display
+     * 
+     * @param {string} prevOperand 
+     * @param {string} curOperand 
+     * @param {string} operation 
+     */
     static updateDisplay(prevOperand = '', curOperand = '', operation = '') {
         curOperandDisplay.innerText = this.formatNumber(curOperand);
         if(operation !== '') {
@@ -107,10 +148,10 @@ class CalculatorUI {
     }
 }
 
-// instantiate calculator
+// Instantiate calculator
 const calculator = new Calculator(prevOperandDisplay, curOperandDisplay);
 
-// event listeners
+// Attach event listeners to calculator buttons
 btnsNum.forEach( btn => {
     btn.addEventListener('click', () => {
         calculator.appendNumber(btn.innerText);
