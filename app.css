@@ -1,9 +1,9 @@
-/*
-* global styles + reset
-*/
+/* Global Styles */
 @import url('https://fonts.googleapis.com/css?family=Hind:400,700&display=swap');
 
-*, *::before, *::after {
+*, 
+*::before, 
+*::after {
     box-sizing: border-box;
     font-family: 'Hind', sans-serif;
 }
@@ -14,9 +14,7 @@ body {
     background: linear-gradient(280deg, #457fca, #5691c8);
 }
   
-/*
-* calculator
-*/
+/* Calculator */
 .calculator {
     display: grid;
     justify-content: center;
@@ -26,7 +24,7 @@ body {
     grid-template-rows: minmax(100px, auto) repeat(5, 100px);
 }
 
-.calculator .btn {
+.calculator__btn {
     font-size: 1.8rem;
     border: 1px solid #fff;
     cursor: pointer;
@@ -35,11 +33,12 @@ body {
     transition: background-color 0.15s ease-in-out;
 }
 
-.calculator .btn:hover {
+.calculator__btn:hover {
     background-color: rgba(255, 255, 255, .9);
 }
 
-.btn--clear, .btn--equals {
+.calculator__btn--clear, 
+.calculator__btn--equals {
     grid-column: span 2;
 }
 
