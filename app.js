@@ -53,7 +53,7 @@ class Calculator {
      * @param {string} num 
      */
     appendNumber(num) {
-        if(num === '.' && this.curOperand.includes('.')) return; // Only one decimal point allowed
+        if( num === '.' && this.curOperand.includes('.') ) return; // Only one decimal point allowed
         this.curOperand = this.curOperand + num.toString();
         CalculatorUI.updateDisplay(this.prevOperandDisplay, this.curOperandDisplay, this.prevOperand, this.curOperand, this.operation);
     }
@@ -64,7 +64,6 @@ class Calculator {
      * @param {string} operation 
      */
     operationSelect(operation) {
-        if (this.curOperand === '') return;
         if (this.prevOperand !== '') this.compute();
         this.operation = operation;
         this.prevOperand = this.curOperand;
