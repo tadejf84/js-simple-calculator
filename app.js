@@ -1,13 +1,3 @@
-// DOM caching
-const btnsNum = document.querySelectorAll('.calculator__btn--num');
-const btnDecimalSeparator = document.querySelector('.calculator__btn--decimal-separator');
-const btnsOperation = document.querySelectorAll('.calculator__btn--operation');
-const btnEquals = document.querySelector('.calculator__btn--equals');
-const btnDel = document.querySelector('.calculator__btn--del');
-const btnClear = document.querySelector('.calculator__btn--clear');
-const prevOperandDisplay = document.querySelector('.prev-operand');
-const curOperandDisplay = document.querySelector('.cur-operand');
-
 /**
  * Calculator Class
  * 
@@ -17,13 +7,24 @@ class Calculator {
     /**
      * @constructor
      * 
-     * @param {HTMLElement} prevOperandDisplay 
-     * @param {HTMLElement} curOperandDisplay 
      */
-    constructor(prevOperandDisplay, curOperandDisplay) {
-        this.prevOperandDisplay = prevOperandDisplay;
-        this.curOperandDisplay = curOperandDisplay;
+    constructor() {
+
+        // DOM Elements
+        this.btnsNum = document.querySelectorAll('.calculator__btn--num');
+        this.btnDecimalSeparator = document.querySelector('.calculator__btn--decimal-separator');
+        this.btnsOperation = document.querySelectorAll('.calculator__btn--operation');
+        this.btnEquals = document.querySelector('.calculator__btn--equals');
+        this.btnDel = document.querySelector('.calculator__btn--del');
+        this.btnClear = document.querySelector('.calculator__btn--clear');
+        this.prevOperandDisplay = document.querySelector('.prev-operand');
+        this.curOperandDisplay = document.querySelector('.cur-operand');
+
+        // Clear Display on Init
         this.clear();
+
+        // Add Event Listeners on Init
+        this.addEventListenersToButtons();
     }
 
     /**
@@ -34,7 +35,7 @@ class Calculator {
         this.curOperand = '';
         this.prevOperand = '';
         this.operation = '';
-        CalculatorUI.updateDisplay();
+        CalculatorUI.updateDisplay(this.prevOperandDisplay, this.curOperandDisplay);
     }
 
     /**
@@ -43,7 +44,7 @@ class Calculator {
      */
     delete() {
         this.curOperand = this.curOperand.toString().slice(0, -1);
-        CalculatorUI.updateDisplay(this.prevOperand, this.curOperand, this.operation);
+        CalculatorUI.updateDisplay(this.prevOperandDisplay, this.curOperandDisplay, this.prevOperand, this.curOperand, this.operation);
     }
 
     /**
@@ -54,7 +55,7 @@ class Calculator {
     appendNumber(num) {
         if(num === '.' && this.curOperand.includes('.')) return; // Only one decimal point allowed
         this.curOperand = this.curOperand + num.toString();
-        CalculatorUI.updateDisplay(this.prevOperand, this.curOperand, this.operation);
+        CalculatorUI.updateDisplay(this.prevOperandDisplay, this.curOperandDisplay, this.prevOperand, this.curOperand, this.operation);
     }
 
     /**
@@ -68,7 +69,7 @@ class Calculator {
         this.operation = operation;
         this.prevOperand = this.curOperand;
         this.curOperand = '';
-        CalculatorUI.updateDisplay(this.prevOperand, this.curOperand, this.operation);
+        CalculatorUI.updateDisplay(this.prevOperandDisplay, this.curOperandDisplay, this.prevOperand, this.curOperand, this.operation);
     }
 
     /**
@@ -79,6 +80,7 @@ class Calculator {
         let result;
         const prevVal = +this.prevOperand;
         const curVal = +this.curOperand;
+
         switch (this.operation) {
             case '+': 
                 result = prevVal + curVal;
@@ -95,10 +97,46 @@ class Calculator {
             default:
                 return;
         }
+
         this.curOperand = result;
         this.prevOperand = '';
         this.operation = '';
-        CalculatorUI.updateDisplay(this.prevOperand, this.curOperand, this.operation);
+        CalculatorUI.updateDisplay(this.prevOperandDisplay, this.curOperandDisplay, this.prevOperand, this.curOperand, this.operation);
+    }
+
+    /**
+     * Add Event Listeners
+     * 
+     */
+    addEventListenersToButtons() {
+
+        this.btnsNum.forEach( btn => {
+            btn.addEventListener('click', () => {
+                this.appendNumber(btn.innerText);
+            });
+        });
+
+        this.btnDecimalSeparator.addEventListener('click', () => {
+            this.appendNumber(this.btnDecimalSeparator.innerText);
+        });   
+        
+        this.btnsOperation.forEach( btn => {
+            btn.addEventListener('click', () => {
+                this.operationSelect(btn.innerText);
+            });
+        });
+
+        this.btnEquals.addEventListener('click', btn => {
+            this.compute();
+        });
+        
+        this.btnClear.addEventListener('click', btn => {
+            this.clear();
+        });
+        
+        this.btnDel.addEventListener('click', btn => {
+            this.delete();
+        });
     }
 }
 
@@ -118,15 +156,19 @@ class CalculatorUI {
         const stringNum = num.toString();
         const integerDigits = +(stringNum.split('.')[0]);
         const decimalDigits = stringNum.split('.')[1];
-        let integerDisplay;
-        if (isNaN(integerDigits)) {
-          integerDisplay = '';
-        } else {
+        let integerDisplay = '';
+
+        if ( !isNaN(integerDigits) ) 
+        {
           integerDisplay = integerDigits.toLocaleString('en', { maximumFractionDigits: 0 });
         }
-        if (decimalDigits != null) {
+
+        if (decimalDigits != null) 
+        {
           return `${integerDisplay}.${decimalDigits}`;
-        } else {
+        } 
+        else 
+        {
           return integerDisplay;
         }
     }
@@ -138,44 +180,19 @@ class CalculatorUI {
      * @param {string} curOperand 
      * @param {string} operation 
      */
-    static updateDisplay(prevOperand = '', curOperand = '', operation = '') {
+    static updateDisplay(prevOperandDisplay, curOperandDisplay, prevOperand = '', curOperand = '', operation = '') {
         curOperandDisplay.innerText = this.formatNumber(curOperand);
-        if(operation !== '') {
+
+        if(operation !== '') 
+        {
             prevOperandDisplay.innerText = `${this.formatNumber(prevOperand)} ${operation}`;
-        } else {
+        } 
+        else 
+        {
             prevOperandDisplay.innerText = '';
         }
     }
 }
 
 // Instantiate calculator
-const calculator = new Calculator(prevOperandDisplay, curOperandDisplay);
-
-// Attach event listeners to calculator buttons
-btnsNum.forEach( btn => {
-    btn.addEventListener('click', () => {
-        calculator.appendNumber(btn.innerText);
-    });
-});
-
-btnDecimalSeparator.addEventListener('click', function () {
-    calculator.appendNumber(this.innerText);
-});
-
-btnsOperation.forEach( btn => {
-    btn.addEventListener('click', () => {
-        calculator.operationSelect(btn.innerText);
-    });
-});
-
-btnEquals.addEventListener('click', btn => {
-    calculator.compute();
-});
-
-btnClear.addEventListener('click', btn => {
-    calculator.clear();
-});
-
-btnDel.addEventListener('click', btn => {
-    calculator.delete();
-});
+const calculator = new Calculator();
