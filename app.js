@@ -44,6 +44,7 @@ class Calculator {
      */
     delete() {
         this.curOperand = this.curOperand.toString().slice(0, -1);
+        if(this.curOperand.length === 0) this.curOperand = 0;
         CalculatorUI.updateDisplay(this.prevOperandDisplay, this.curOperandDisplay, this.prevOperand, this.curOperand, this.operation);
     }
 
